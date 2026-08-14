@@ -1,99 +1,768 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V3</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-<link href="{{ url_for('static', filename='images/favicon.ico') }}" rel="stylesheet">
-<!--===============================================================================================-->
-<link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!--===============================================================================================-->
-<link href="{{ url_for('static', filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
-	
-<!--===============================================================================================-->
-<link href="{{ url_for('static', filename='fonts/iconic/css/material-design-iconic-font.min.css') }}" rel="stylesheet" type="text/css">
+    <title>Admin Login | FRAMS</title>
 
-<!--===============================================================================================-->
-<link href="{{ url_for('static', filename='vendor/animate/animate.css') }}" rel="stylesheet" type="text/css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<!--===============================================================================================-->
+        body {
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f7f9;
+            color: #1d3038;
+            overflow: hidden;
+        }
 
-<link href="{{ url_for('static', filename='vendor/css-hamburgers/hamburgers.min.css') }}" rel="stylesheet" type="text/css">
+        /* =========================================
+           MAIN PAGE
+        ========================================= */
 
-<!--===============================================================================================-->
+        .page {
+            min-height: 100vh;
+            display: flex;
+        }
 
-<link href="{{ url_for('static', filename='vendor/animsition/css/animsition.min.css') }}" rel="stylesheet" type="text/css">
+        /* =========================================
+           LEFT SIDE
+        ========================================= */
 
-<!--===============================================================================================-->
+        .left-panel {
+            width: 55%;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
 
-<link href="{{ url_for('static', filename='vendor/select2/select2.min.css') }}" rel="stylesheet" type="text/css">
-	
-<!--===============================================================================================-->	
+            background:
+                linear-gradient(
+                    rgba(15, 42, 52, 0.88),
+                    rgba(25, 67, 80, 0.90)
+                ),
+                url("{{ url_for('static', filename='bg-test6.jpg') }}")
+                center / cover no-repeat;
 
-<link href="{{ url_for('static', filename='vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet" type="text/css">
-	
-<!--===============================================================================================-->
-<link href="{{ url_for('static', filename='css/util.css') }}" rel="stylesheet" type="text/css">
-<link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet" type="text/css">
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 70px 90px;
+            color: white;
+        }
 
-<!--===============================================================================================-->
+        .left-panel::before {
+            content: "";
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.12);
+            top: -150px;
+            right: -130px;
+        }
+
+        .left-panel::after {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.10);
+            bottom: -120px;
+            left: -100px;
+        }
+
+        .brand {
+            position: absolute;
+            top: 35px;
+            left: 55px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 2;
+        }
+
+        .brand img {
+            width: 58px;
+            height: 58px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.12);
+            padding: 6px;
+        }
+
+        .brand-name {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .left-content {
+            position: relative;
+            z-index: 2;
+            max-width: 650px;
+        }
+
+        .small-heading {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #b9d6dc;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .left-content h1 {
+            font-size: 52px;
+            line-height: 1.15;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .left-content h1 span {
+            color: #8ed1dc;
+        }
+
+        .left-content p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #dce9ec;
+            max-width: 590px;
+        }
+
+        /* =========================================
+           FEATURES
+        ========================================= */
+
+        .features {
+            margin-top: 45px;
+            display: flex;
+            gap: 35px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #e5f0f2;
+            font-size: 14px;
+        }
+
+        .feature-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.12);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        /* =========================================
+           RIGHT SIDE
+        ========================================= */
+
+        .right-panel {
+            width: 45%;
+            min-height: 100vh;
+            background: #ffffff;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 60px 80px;
+        }
+
+        .login-section {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        /* =========================================
+           LOGIN HEADER
+        ========================================= */
+
+        .login-header {
+            margin-bottom: 38px;
+        }
+
+        .login-header .welcome {
+            color: #78909a;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .login-header h2 {
+            font-size: 38px;
+            color: #19343e;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .login-header p {
+            color: #7a8a91;
+            font-size: 15px;
+        }
+
+        /* =========================================
+           FORM
+        ========================================= */
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #304951;
+            margin-bottom: 9px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            height: 58px;
+
+            border: 1px solid #d8e1e5;
+            border-radius: 10px;
+
+            background: #f8fafb;
+
+            padding: 0 48px 0 48px;
+
+            font-size: 15px;
+            color: #263b42;
+
+            outline: none;
+
+            transition: 0.25s ease;
+        }
+
+        .input-wrapper input:hover {
+            border-color: #b9cbd1;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #2d6878;
+            background: #ffffff;
+
+            box-shadow:
+                0 0 0 4px rgba(45,104,120,0.10);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 17px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            font-size: 18px;
+            color: #467987;
+
+            pointer-events: none;
+        }
+
+        /* =========================================
+           PASSWORD BUTTON
+        ========================================= */
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+            background: transparent;
+
+            color: #71838a;
+
+            cursor: pointer;
+
+            font-size: 17px;
+
+            padding: 5px;
+
+            margin: 0;
+        }
+
+        .password-toggle:hover {
+            color: #244e5b;
+        }
+
+        /* =========================================
+           LOGIN BUTTON
+        ========================================= */
+
+        .login-btn {
+            width: 100%;
+            height: 58px;
+
+            border: none;
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1d4855,
+                    #2e7180
+                );
+
+            color: white;
+
+            font-size: 16px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            margin-top: 8px;
+
+            transition: 0.25s ease;
+
+            box-shadow:
+                0 10px 25px rgba(32,88,103,0.20);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 14px 30px rgba(32,88,103,0.28);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        /* =========================================
+           BACK HOME
+        ========================================= */
+
+        .back-home {
+            margin-top: 25px;
+
+            text-align: center;
+        }
+
+        .back-home a {
+            color: #55737c;
+            text-decoration: none;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            transition: 0.2s ease;
+        }
+
+        .back-home a:hover {
+            color: #1d5362;
+        }
+
+        /* =========================================
+           SECURITY NOTE
+        ========================================= */
+
+        .security-note {
+            margin-top: 35px;
+
+            padding: 14px 16px;
+
+            border-radius: 9px;
+
+            background: #f4f8f9;
+
+            border: 1px solid #e3ecef;
+
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            color: #72858b;
+
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .security-icon {
+            font-size: 17px;
+        }
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        .copyright {
+            position: fixed;
+
+            bottom: 18px;
+            right: 45px;
+
+            font-size: 11px;
+
+            color: #9ba8ad;
+        }
+
+        /* =========================================
+           TABLET
+        ========================================= */
+
+        @media (max-width: 1000px) {
+
+            .left-panel {
+                padding: 60px;
+            }
+
+            .left-content h1 {
+                font-size: 42px;
+            }
+
+            .right-panel {
+                padding: 50px;
+            }
+        }
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 750px) {
+
+            body {
+                overflow: auto;
+            }
+
+            .page {
+                display: block;
+            }
+
+            .left-panel {
+                width: 100%;
+                min-height: 330px;
+                padding: 100px 30px 50px;
+            }
+
+            .right-panel {
+                width: 100%;
+                min-height: auto;
+                padding: 55px 30px;
+            }
+
+            .brand {
+                top: 25px;
+                left: 30px;
+            }
+
+            .left-content h1 {
+                font-size: 34px;
+            }
+
+            .left-content p {
+                font-size: 15px;
+            }
+
+            .features {
+                display: none;
+            }
+
+            .login-header h2 {
+                font-size: 31px;
+            }
+
+            .copyright {
+                display: none;
+            }
+        }
+    </style>
 </head>
+
 <body>
-	
-	<div class="limiter">
-		<div class="container-login100" style="background-color: #1b1e21;">
-			<div class="wrap-login100">
-				<form class="login100-form validate-form" action="/data" method="POST">
-					<span class="login100-form-logo">
-					<img src="static/key-person-dark.png">
-						<!--<i class="zmdi zmdi-landscape"></i> -->
-					</span>
 
-					<span class="login100-form-title p-b-34 p-t-27">
-						Admin Login
-					</span>
+<div class="page">
 
-					<div class="wrap-input100 validate-input" data-validate = "Enter username">
-						<input class="input100" type="text" name="username" placeholder="Username" required>
-						<span class="focus-input100" data-placeholder="&#xf207;"></span>
-					</div>
+    <!-- =========================================
+         LEFT PANEL
+    ========================================== -->
 
-					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<input class="input100" type="password" name="pass" placeholder="Password" required>
-						<span class="focus-input100" data-placeholder="&#xf191;"></span>
-					</div>
+    <section class="left-panel">
 
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
-							Login
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	
+        <div class="brand">
 
-	<div id="dropDownSelect1"></div>
-	
-<!--===============================================================================================-->
-	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/animsition/js/animsition.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/bootstrap/js/popper.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/select2/select2.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/daterangepicker/moment.min.js"></script>
-	<script src="vendor/daterangepicker/daterangepicker.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/countdowntime/countdowntime.js"></script>
-<!--===============================================================================================-->
-	<script src="js/main.js"></script>
+            <img
+                src="{{ url_for('static', filename='images/dow.png') }}"
+                alt="FRAMS Logo"
+            >
+
+            <div class="brand-name">
+                FRAMS
+            </div>
+
+        </div>
+
+
+        <div class="left-content">
+
+            <div class="small-heading">
+                Administration Portal
+            </div>
+
+            <h1>
+                Manage your
+                <span>attendance</span>
+                securely.
+            </h1>
+
+            <p>
+                Welcome to the administrative portal of the
+                Face Recognition based Attendance Management System.
+                Sign in to access student records, attendance reports
+                and system management tools.
+            </p>
+
+
+            <div class="features">
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ✓
+                    </div>
+
+                    <span>
+                        Secure Access
+                    </span>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ◉
+                    </div>
+
+                    <span>
+                        Face Recognition
+                    </span>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ▣
+                    </div>
+
+                    <span>
+                        Attendance Reports
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         RIGHT PANEL
+    ========================================== -->
+
+    <section class="right-panel">
+
+        <div class="login-section">
+
+            <div class="login-header">
+
+                <div class="welcome">
+                    Welcome back
+                </div>
+
+                <h2>
+                    Admin Login
+                </h2>
+
+                <p>
+                    Enter your credentials to continue.
+                </p>
+
+            </div>
+
+
+            <!-- LOGIN FORM -->
+
+            <form action="/data" method="POST">
+
+                <!-- USERNAME -->
+
+                <div class="input-group">
+
+                    <label for="username">
+                        Username
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            👤
+                        </span>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter your username"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="input-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="pass"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword()"
+                            aria-label="Show password"
+                        >
+                            👁
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOGIN -->
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                >
+                    Sign In to Admin Panel
+                </button>
+
+            </form>
+
+
+            <!-- BACK HOME -->
+
+            <div class="back-home">
+
+                <a href="/">
+                    ← Back to Home
+                </a>
+
+            </div>
+
+
+            <!-- SECURITY -->
+
+            <div class="security-note">
+
+                <span class="security-icon">
+                    🔐
+                </span>
+
+                <span>
+                    Your administrative credentials are used only
+                    to provide secure access to the attendance system.
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<div class="copyright">
+    © 2026 FRAMS · Face Recognition Attendance Management System
+</div>
+
+
+<script>
+
+function togglePassword() {
+
+    const password =
+        document.getElementById("password");
+
+    const button =
+        document.querySelector(".password-toggle");
+
+
+    if (password.type === "password") {
+
+        password.type = "text";
+
+        button.textContent = "🙈";
+
+        button.setAttribute(
+            "aria-label",
+            "Hide password"
+        );
+
+    } else {
+
+        password.type = "password";
+
+        button.textContent = "👁";
+
+        button.setAttribute(
+            "aria-label",
+            "Show password"
+        );
+
+    }
+
+}
+
+</script>
 
 </body>
 </html>

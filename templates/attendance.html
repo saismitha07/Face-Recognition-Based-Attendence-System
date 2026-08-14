@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Punch Attendance | FRAMS</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 30px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+
+            background: white;
+
+            border-radius: 20px;
+
+            padding: 35px;
+
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #203a43;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        video {
+            width: 100%;
+            max-width: 600px;
+
+            border-radius: 15px;
+
+            background: #111;
+
+            display: block;
+
+            margin: 20px auto;
+        }
+
+        button {
+            border: none;
+
+            padding: 13px 25px;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+            margin: 8px;
+        }
+
+        .camera-btn {
+            background: #203a43;
+            color: white;
+        }
+
+        .capture-btn {
+            background: #198754;
+            color: white;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #status {
+            margin-top: 20px;
+
+            font-weight: bold;
+
+            font-size: 17px;
+        }
+
+        canvas {
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Punch Your Attendance</h1>
+
+    <p class="subtitle">
+        Position your face clearly inside the camera and capture your photo.
+    </p>
+
+    <video id="camera" autoplay playsinline></video>
+
+    <canvas id="canvas"></canvas>
+
+    <div>
+
+        <button
+            type="button"
+            class="camera-btn"
+            onclick="startCamera()">
+
+            Start Camera
+
+        </button>
+
+        <button
+            type="button"
+            class="capture-btn"
+            onclick="captureAttendance()">
+
+            Capture & Mark Attendance
+
+        </button>
+
+        <button
+            type="button"
+            class="back-btn"
+            onclick="window.location.href='/'">
+
+            Back
+
+        </button>
+
+    </div>
+
+    <p id="status"></p>
+
+</div>
+
+
+<script>
+
+let stream = null;
+
+const video = document.getElementById("camera");
+
+const canvas = document.getElementById("canvas");
+
+const statusText = document.getElementById("status");
+
+
+async function startCamera() {
+
+    try {
+
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: true
+        });
+
+        video.srcObject = stream;
+
+        statusText.textContent =
+            "Camera started. Position your face clearly.";
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        statusText.textContent =
+            "Camera access denied or unavailable.";
+
+    }
+
+}
+
+
+async function captureAttendance() {
+
+    if (!stream) {
+
+        statusText.textContent =
+            "Please start the camera first.";
+
+        return;
+
+    }
+
+
+    if (
+        video.videoWidth === 0 ||
+        video.videoHeight === 0
+    ) {
+
+        statusText.textContent =
+            "Camera is not ready. Please wait.";
+
+        return;
+
+    }
+
+
+    canvas.width = video.videoWidth;
+
+    canvas.height = video.videoHeight;
+
+
+    const context = canvas.getContext("2d");
+
+
+    context.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    statusText.textContent =
+        "Checking your face...";
+
+
+    canvas.toBlob(async function(blob) {
+
+        const formData = new FormData();
+
+        formData.append(
+            "image",
+            blob,
+            "attendance.png"
+        );
+
+
+        try {
+
+            const response = await fetch(
+                "/recognize_face",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+            const result = await response.json();
+
+
+            statusText.textContent =
+                result.message;
+
+
+            if (result.success) {
+
+                if (stream) {
+
+                    stream.getTracks().forEach(
+                        track => track.stop()
+                    );
+
+                    stream = null;
+
+                }
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            statusText.textContent =
+                "Something went wrong while checking your face.";
+
+        }
+
+    }, "image/png");
+
+}
+
+</script>
+
+</body>
+
+</html>

@@ -218,7 +218,7 @@ html{
   <body>
  <nav id="navbar">
     <div id="logo">
-        <img src="{{url_for('static',filename='images/key-person2.png')}}" class="rounded-circle" alt="Icon">
+        <img src="{{url_for('static',filename='images/key-person-dark.png')}}" class="rounded-circle" alt="Icon">
     </div>
 <ul>
     <li class="item"><a href="#home">Home</a></li>
@@ -235,9 +235,11 @@ html{
  <form action="/new" method="POST">
  <button type="submit" class="btn btn-primary btn-block btn-large mt-5">Register New Student</button>
   </form>
-  <form action="#" method="post">
-<button type="submit" class="btn btn-primary btn-block btn-large">Punch your Attendance</button>
- </form>
+  <form action="/attendance" method="GET">
+    <button type="submit" class="btn btn-primary btn-block btn-large">
+        Punch your Attendance
+    </button>
+</form>
 </section>
 <section id="contact">
     <h1 class="h-primary center"> Contact Us</h1>
